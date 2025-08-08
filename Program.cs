@@ -12,7 +12,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
     //{0} ten Action
     //{1} ten Controller
     //{2} Ten Area
-    options.ViewLocationFormats.Add("/MyView/{1}/{0}.cshtml" + RazorViewEngine.ViewExtension);
+    options.ViewLocationFormats.Add("/MyView/{1}/{0}.cshtml");
 });
 // builder.Services.AddSingleton<ProductService>();
 // builder.Services.AddSingleton<ProductService, ProductService>();

@@ -13,11 +13,11 @@ namespace App.Controllers
         private readonly ILogger<FirstController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly ProductService _productService;
-        public FirstController(ILogger<FirstController> logger, IWebHostEnvironment env, ProductService productModels)
+        public FirstController(ILogger<FirstController> logger, IWebHostEnvironment env, ProductService productService)
         {
             _logger = logger;
             _env = env; // lay duong dan luu file
-            _productService = productModels;
+            _productService = productService;
 
         }
         public string Index()
@@ -87,7 +87,7 @@ namespace App.Controllers
         public string StatusMessage{ set; get; }
         public IActionResult ViewProduct(int? id)
         {
-            var product = _productService.Where(p => p.Id == id).FirstOrDefault();
+            var product = _productService.FirstOrDefault(p => p.Id == id);;
             if (product == null)
             {
                 // TempData["StatusMessage"] = "San pham ko co";
@@ -104,7 +104,7 @@ namespace App.Controllers
             // this.ViewData["product"] = product;
             // ViewData["Title"] = product.Name;
             // return View("ViewProduct2");
-            ViewBag.product = product;
+            // ViewBag.product = product;
             return View("ViewProduct3");
 
         }
