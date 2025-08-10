@@ -21,7 +21,7 @@ namespace App.Controllers
             return View();
         }
         [BindProperty(SupportsGet = true, Name = "action")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         public IActionResult Mercury()
         {
