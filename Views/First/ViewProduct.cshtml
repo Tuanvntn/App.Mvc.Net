@@ -1,12 +1,24 @@
+@using App.Models
+
 @model App.Models.ProductModel
 
+@if (Model != null)
+{
+    
+        ViewData["Title"] = @Model.Name;
+    }
+    <p>@ViewData["Title"]</p>
 
-<div class="card bg-danger text-white">
-    <h1 class="card-header">@Model.Name</h1>
-    <div class="card-body">
-        <p class="card-text">
-            Gia san pham: @Model.Price
-        </p>
+    <div class="card bg-primary text-white">
+        <h1 class="card-header">@Model?.Name</h1>
+        <div class="card-body">
+            <p class="card-text">
+                Gia san pham: @Model?.Price
+            </p>
+        </div>
     </div>
-</div>
-
+}
+else
+{
+    <p class="alert alert-danger">Sản phẩm không tồn tại.</p>
+}

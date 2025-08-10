@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using App.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
+using App.ExtendMethods;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 // builder.Services.AddSingleton<ProductService, ProductService>();
 // builder.Services.AddSingleton(typeof(ProductService));
 builder.Services.AddSingleton(typeof(ProductService), typeof(ProductService));
+builder.Services.AddSingleton<PlanetService>();
 
 
 var app = builder.Build();
@@ -32,13 +36,30 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.AddStatusCodePage(); // tra respone loi tu 400-599
 
 app.UseRouting();
 
 app.UseAuthorization();
 
+
+    
+app.MapAreaControllerRoute(
+    name: "productManage",
+    areaName: "productManage",
+    pattern: "productManage/{controller=Product}/{action=Index}/{id?}"
+);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapGet("/sayhi", async (context) =>
+{
+    await context.Response.WriteAsync($"Hello ASP.NET {DateTime.Now}");
+});
+
+
+
 app.MapRazorPages();
 app.Run();

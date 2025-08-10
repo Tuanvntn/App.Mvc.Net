@@ -1,19 +1,24 @@
-
 @using App.Models
 
-@model App.Models.ProductModel
 @{
-    var product = ViewData["product"] as ProductModel;
-
+    // Lấy dữ liệu từ ViewData và ép kiểu an toàn
+    var product = ViewData["product"] as App.Models.ProductModel;
 }
-<p>@ViewData["Title"]</p>
 
-<div class="card bg-primary text-white">
-    <h1 class="card-header">@product.Name</h1>
-    <div class="card-body">
-        <p class="card-text">
-            Gia san pham: @product.Price
-        </p>
+@if (product != null)
+{
+    <p>@product.Name</p>
+    <div class="card bg-primary text-white">
+        <h1 class="card-header">@product.Name</h1>
+        <div class="card-body">
+            <p class="card-text">
+                Gia san pham: @product.Price
+            </p>
+        </div>
     </div>
-</div>
-
+}
+else
+{
+    // Hiển thị thông báo nếu sản phẩm không tồn tại
+    <p class="alert alert-danger">Sản phẩm không tìm thấy.</p>
+}

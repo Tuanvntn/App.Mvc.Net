@@ -1,38 +1,37 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using App.Services;
 using App.Models;
 
-
-
 namespace App.Controllers
 {
+   
     public class FirstController : Controller
     {
         private readonly ILogger<FirstController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly ProductService _productService;
+
         public FirstController(ILogger<FirstController> logger, IWebHostEnvironment env, ProductService productService)
         {
             _logger = logger;
-            _env = env; // lay duong dan luu file
+            _env = env; // Lấy đường dẫn lưu file
             _productService = productService;
-
         }
+
         public string Index()
         {
             _logger.LogWarning("thong bao");
             _logger.LogInformation("Action");
             return "Toi la Index cua First";
         }
+
         public IActionResult Bird()
         {
             // Sử dụng Path.Combine() để tạo đường dẫn tuyệt đối đến tệp tin trong wwwroot
             // Su dung ContentRootPath de lay duong dan vao thu muc nam ngoai root
             string filePath = Path.Combine(_env.WebRootPath, "images", "Birds.jpg");
 
-            //Kiểm tra xem tệp tin có tồn tại không để tránh lỗi
+            // Kiểm tra xem tệp tin có tồn tại không để tránh lỗi
             if (!System.IO.File.Exists(filePath))
             {
                 // Trả về lỗi 404 nếu tệp không tồn tại
@@ -44,8 +43,8 @@ namespace App.Controllers
 
             // Trả về tệp tin, chỉ định loại MIME và tên tệp
             return File(fileBytes, "image/jpg");
-
         }
+
         public IActionResult IphonePrice()
         {
             return Json(
@@ -54,19 +53,22 @@ namespace App.Controllers
                     productName = "IphoneX",
                     Price = 1000,
                 }
-
             );
         }
+
         public IActionResult Privacy()
         {
             var url = Url.Action("Privacy", "Home");
             _logger.LogInformation("Chuyen huong den" + url);
-            return LocalRedirect(url);
+            // Sử dụng '!' để khẳng định url không null
+            return LocalRedirect(url!);
         }
+
         public IActionResult Google()
         {
             var url = "https://google.com";
             _logger.LogInformation("Chuyen huong den" + url);
+            // Url là chuỗi hằng nên không thể null
             return Redirect(url);
         }
 
@@ -76,38 +78,35 @@ namespace App.Controllers
             {
                 username = "khach";
             }
-
-            // return View("/MyView/xinchao.cshtml", username); // duong dan tuyet doi
-            // return View("xinchao2", username); // lay duong dan trong thu muc Views/First/xinchao2
-            // return View(); // lay file mac dinh nhu ten phuong thuc trong thu muc Views/First
-            // return View((object)username); // them thuoc tinh
             return View("xinchao2", username);
         }
+
         [TempData]
-        public string StatusMessage{ set; get; }
+        public string? StatusMessage { set; get; }
+
+        [Route("khach-hang/danh-sach/{ten_danh_sach}")]
+        public IActionResult Danh_sach(string? ten_danh_sach)
+        {
+            return Content($"Danh sach khach hang: {ten_danh_sach}");
+        }
+        [AcceptVerbs("POST", "GET")]
         public IActionResult ViewProduct(int? id)
         {
-            var product = _productService.FirstOrDefault(p => p.Id == id);;
+            var product = _productService.FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
-                // TempData["StatusMessage"] = "San pham ko co";
                 StatusMessage = "San pham ko co";
-                return Redirect(Url.Action("Index", "Home"));
+                // Url.Action() luôn trả về chuỗi, nên an toàn
+                return Redirect(Url.Action("Index", "Home")!);
             }
-            // /View/First/ViewProduct.cshtml
-            // /MyView/First/ViewProduct.cshtml
 
-            //Model
-            // return View(product);
-
-            //View Data
-            // this.ViewData["product"] = product;
-            // ViewData["Title"] = product.Name;
-            // return View("ViewProduct2");
             // ViewBag.product = product;
-            return View("ViewProduct3");
+            // return View("ViewProduct3"); // c3 su dung cho du lieu nho
 
+            // ViewData["product"] = product;
+            // return View("ViewProduct2"); c2 tuong tu c3
+            
+            return View("ViewProduct", product); // c1 toi uu nhat
         }
-
     }
 }
