@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using App.Models;
 using ContactModel = App.Models.Contacts.Contact;
 using Microsoft.AspNetCore.Authorization;
+using App.Data;
 
 namespace App.Area.Contact.Controllers
 {
     [Area("Contact")]
+    [Authorize(Roles = RoleName.Administrator)]
     public class ContactController : Controller
     {
         private readonly AppDbContext _context;
@@ -21,14 +23,14 @@ namespace App.Area.Contact.Controllers
             _context = context;
         }
 
-  
+
         [HttpGet("/admin/contact")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Contacts.ToListAsync());
         }
 
-   
+
         [HttpGet("/admin/contact/details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -94,7 +96,7 @@ namespace App.Area.Contact.Controllers
             return View(contact);
         }
 
-        
+
         [HttpPost("/admin/contact/delete/{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

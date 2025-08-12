@@ -1,17 +1,32 @@
-<div class="dropdown ms-auto" style="margin-right: 50px;">
-    <a class="btn btn-outline-danger dropdown-toggle" href="#"
-        id="managedropdownmenu" data-bs-toggle="dropdown">
-        Manage
-    </a>
-    <div class="dropdown-menu" aria-labelledby="managedropdownmenu">
-        <a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">
-            Database
+@using Microsoft.AspNetCore.Authorization
+
+@inject IAuthorizationService authorizationService
+
+
+@{
+    var result = await authorizationService.AuthorizeAsync(this.User, "ViewManageMenu");
+}
+
+@if (result.Succeeded)
+{
+    <div class="dropdown ms-auto" style="margin-right: 50px;">
+        <a class="btn btn-outline-danger dropdown-toggle" href="#"
+            id="managedropdownmenu" data-bs-toggle="dropdown">
+            Manage
         </a>
-        <a class="dropdown-item text-danger" asp-action="Index" asp-controller="Contact" asp-area="Contact">
-            Quan ly lien he
-        </a>
-        <a class="dropdown-item text-danger" asp-action="DeleteDb" asp-controller="DbManage" asp-area="Database">
-            Xóa Database
-        </a>     
+        <div class="dropdown-menu" aria-labelledby="managedropdownmenu">
+            <a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">
+                Database
+            </a>
+            <a class="dropdown-item text-danger" asp-action="Index" asp-controller="Contact" asp-area="Contact">
+                Quan ly lien he
+            </a>
+            <a class="dropdown-item text-danger" asp-action="Index" asp-controller="Role" asp-area="Identity">
+                Quan ly role (Vai tro)
+            </a>   
+            <a class="dropdown-item text-danger" asp-action="Index" asp-controller="User" asp-area="Identity">
+                Quan ly thanh vien
+            </a>   
+        </div>
     </div>
-</div>
+}

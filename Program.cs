@@ -8,6 +8,7 @@ using App.Models;
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using App.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+
+builder.Services.AddOptions();
+            var mailsetting = builder.Configuration.GetSection("MailSettings");
+            builder.Services.Configure<MailSettings>(mailsetting);
+            builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppMvcConnectionString")));
@@ -56,10 +63,10 @@ builder.Services.Configure<IdentityOptions> (options => {
 });      
 
 builder.Services.ConfigureApplicationCookie(options => {
-    options.LoginPath = "/login/";
-    options.LogoutPath = "/logout/";
+    options.LoginPath = "/Login";
+    options.LogoutPath = "/logout";
     options.AccessDeniedPath = "/khongduoctruycap.html";
-});  
+}); 
 
 builder.Services.AddAuthentication()
         .AddGoogle(options => {
@@ -77,7 +84,14 @@ builder.Services.AddAuthentication()
             options.AppSecret = fconfig["AppSecret"];
             options.CallbackPath = "/dang-nhap-tu-facebook";
         });
-                   
+
+builder.Services.AddAuthorization(options =>{
+    options.AddPolicy("ViewManageMenu", builder =>
+    {
+        builder.RequireAuthenticatedUser();
+        builder.RequireRole(RoleName.Administrator);
+    });
+});                 
       
 builder.Services.AddIdentity<AppUser, IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>()
@@ -88,6 +102,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 // builder.Services.AddSingleton(typeof(ProductService));
 builder.Services.AddSingleton(typeof(ProductService), typeof(ProductService));
 builder.Services.AddSingleton<PlanetService>();
+builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
+
+
 
 
 var app = builder.Build();
