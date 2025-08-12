@@ -11,8 +11,8 @@
     var can_connect = dbContext.Database.CanConnect();
     var appliedMigrations = dbContext.Database.GetAppliedMigrations().ToList();
     var pendingMigrations = dbContext.Database.GetPendingMigrations().ToList(); 
-
 }
+
 <partial name ="_AlertMessage"/>
 <h1>thong tin ve co so du lieu</h1>
 <p>- Database: @dbname</p>
@@ -22,18 +22,12 @@
 
 
 <h2>Migrations</h2>
-
 @foreach (var migration in appliedMigrations)
-        {
-            <p>@migration</p>
-            <h3>Cac Table</h3>
-            await dbContext.Database.OpenConnectionAsync();
-            var table = dbContext.Database.GetDbConnection().GetSchema("Tables");
-            foreach (System.Data.DataRow row in table.Rows)
-            {
-                <li>@row["TABLE_Name"]</li>
-            }
-        }
+{
+    <p>@migration</p>
+}
+            
+          
 
 @foreach (var migration in pendingMigrations)
         {
@@ -64,38 +58,6 @@
     }
     <a class="btn btn-danger" asp-action="DeleteDb">Xoa Database: @dbname</a>
 }
-@* @if (dbContext.Database.CanConnect())
-{
-
-    var appliedMigrations = dbContext.Database.GetAppliedMigrations().ToList();
-    var pendingMigrations = dbContext.Database.GetPendingMigrations().ToList();
-
-    
-    if (appliedMigrations.Any())
-    {
-        foreach (var migration in appliedMigrations)
-        {
-            <p>@migration</p>
-            <h3>Cac Table</h3>
-            await dbContext.Database.OpenConnectionAsync();
-            var table = dbContext.Database.GetDbConnection().GetSchema("Tables");
-            foreach (System.Data.DataRow row in table.Rows)
-            {
-                <li>@row["TABLE_Name"]</li>
-            }
-        }
-    }
-    else
-    {
-        <p>Chưa có migration nào được áp dụng.</p>
-    }
-
-    
-}
-else
-{
-    <p>❌ Không thể kết nối đến cơ sở dữ liệu.</p>
-} *@
     
     
 

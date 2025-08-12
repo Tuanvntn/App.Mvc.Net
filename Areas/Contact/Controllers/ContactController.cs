@@ -54,7 +54,7 @@ namespace App.Area.Contact.Controllers
             return View();
         }
         [TempData]
-        public string StatusMessage { set; get; }
+        public string? StatusMessage { set; get; }
 
         [HttpPost("/contact/")]
         [AllowAnonymous]
